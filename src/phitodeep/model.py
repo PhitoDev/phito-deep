@@ -1,7 +1,7 @@
-import loss as ls
-import optimization
-from layers import activation as a
-from layers import base as b
+from . import loss as ls
+from . import optimization
+from .layers import activation as a
+from .layers import base as b
 
 
 class Sequential:

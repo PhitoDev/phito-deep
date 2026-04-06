@@ -36,9 +36,11 @@ class CategoricalCrossEntropy(LossBase):
         return -np.mean(np.log(correct + 1e-8))
 
     def loss_gradient(self, y_pred, y_true):
+        # Fused Softmax + CCE gradient: (y_pred - one_hot(y_true)) / N
         N = len(y_true)
-        correct = y_pred[np.arange(N), y_true]
-        return -y_true / (correct + 1e-8)
+        grad = y_pred.copy()
+        grad[np.arange(N), y_true] -= 1.0
+        return grad / N
 
 
 class BinaryCrossEntropy(LossBase):

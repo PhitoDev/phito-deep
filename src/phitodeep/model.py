@@ -54,7 +54,7 @@ class Sequential:
             case _:
                 raise ValueError(f"{self.optimizer} is not a valid optimizer.")
 
-        return optimization.train_loop(
+        losses = optimization.train_loop(
             model=self,
             X=X,
             y=y,
@@ -65,6 +65,14 @@ class Sequential:
             batch_size=self.batch_size,
             epochs=self.epochs,
         )
+
+        print("Training complete.")
+        print("-" * 60)
+        print(f"Starting Training Loss: {losses[0][0]:.4f} | Starting Test Loss: {losses[0][1]:.4f}")
+        print(f"Final Training Loss: {losses[-1][0]:.4f} | Final Test Loss: {losses[-1][1]:.4f}")
+        print(f"Training Loss Improvement: {losses[0][0] - losses[-1][0]:.4f} | Test Loss Improvement: {losses[0][1] - losses[-1][1]:.4f}")
+        print("-" * 60)
+        return losses
 
     def predict(self, X):
         """

@@ -1,7 +1,6 @@
 import numpy as np
 from datasets import load_dataset
 
-import phitodeep.layers as layers
 import phitodeep.loss as loss
 import phitodeep.model as m
 

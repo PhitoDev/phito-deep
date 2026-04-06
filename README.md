@@ -10,7 +10,7 @@ $ pip install phitodeep
 
 ## Usage
 
-- TODO
+- To see an example of how to use `phitodeep`, check out the [example notebook](docs/example.ipynb) or the [MNIST example script](examples/mnist.py).
 
 ## Contributing
 

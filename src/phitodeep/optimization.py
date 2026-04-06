@@ -72,10 +72,11 @@ def train_loop(
 
         y_pred = model.predict(X)
         loss = loss_class.loss_func(y_pred, y)
-        losses.append(loss)
 
         y_pred_test = model.predict(X_test)
         loss_test = loss_class.loss_func(y_pred_test, y_test)
+
+        losses.append((loss, loss_test))
 
         if epoch % 10 == 0:
             print(f"Epoch {epoch}, Loss: {loss:.4f}, Test Loss: {loss_test:.4f}")

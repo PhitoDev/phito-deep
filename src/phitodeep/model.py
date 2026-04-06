@@ -45,7 +45,7 @@ class Sequential:
     def setloss(self, loss_class):
         self.loss_class = loss_class
 
-    def train(self, X, y):
+    def train(self, X, y, X_test, y_test):
         match self.optimizer:
             case "sgd":
                 optimizer = optimization.SGD(alpha=self.alpha)
@@ -58,6 +58,8 @@ class Sequential:
             model=self,
             X=X,
             y=y,
+            X_test=X_test,
+            y_test=y_test,
             optimizer=optimizer,
             loss_class=self.loss_class,
             batch_size=self.batch_size,

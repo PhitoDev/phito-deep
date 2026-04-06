@@ -1,5 +1,6 @@
 import numpy as np
-from layers.base import Layer
+
+from .base import Layer
 
 
 class ReLu(Layer):
@@ -66,8 +67,8 @@ class Softmax(Layer):
 
     def forward(self, X):
         self.cache["X"] = X
-        max_a = np.max(X)
         axis = None if X.ndim < 2 else 1
+        max_a = np.max(X, axis=axis, keepdims=True)
 
         dividend = np.exp(X - max_a)
         divisor = np.sum(np.exp(X - max_a), axis=axis, keepdims=True)
@@ -78,13 +79,11 @@ class Softmax(Layer):
     def backward(self, dL_dZ):
         """
         Backpropagate through Softmax activation.
-        For softmax with cross-entropy loss, dL_dX = softmax(Z) - y_true
-        For MSE loss: approximate derivative as softmax(Z) * (1 - softmax(Z))
+        When paired with CategoricalCrossEntropy, the combined gradient
+        (y_pred - one_hot(y_true)) / N is computed entirely in the loss,
+        so this layer is a straight pass-through.
         """
-        Z = self.cache["Z"]
-        # Element-wise product with jacobian diagonal approximation
-        dL_dX = dL_dZ * Z * (1 - Z)
-        return dL_dX
+        return dL_dZ
 
 
 class ELU(Layer):

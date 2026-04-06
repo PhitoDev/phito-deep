@@ -1,7 +1,7 @@
-import loss as ls
-import optimization
-from layers import activation as a
-from layers import base as b
+from . import loss as ls
+from . import optimization
+from .layers import activation as a
+from .layers import base as b
 
 
 class Sequential:
@@ -45,7 +45,7 @@ class Sequential:
     def setloss(self, loss_class):
         self.loss_class = loss_class
 
-    def train(self, X, y):
+    def train(self, X, y, X_test, y_test):
         match self.optimizer:
             case "sgd":
                 optimizer = optimization.SGD(alpha=self.alpha)
@@ -54,17 +54,27 @@ class Sequential:
             case _:
                 raise ValueError(f"{self.optimizer} is not a valid optimizer.")
 
-        return optimization.train_loop(
+        losses = optimization.train_loop(
             model=self,
             X=X,
             y=y,
+            X_test=X_test,
+            y_test=y_test,
             optimizer=optimizer,
             loss_class=self.loss_class,
             batch_size=self.batch_size,
             epochs=self.epochs,
         )
 
-    def forward(self, X):
+        print("Training complete.")
+        print("-" * 60)
+        print(f"Starting Training Loss: {losses[0][0]:.4f} | Starting Test Loss: {losses[0][1]:.4f}")
+        print(f"Final Training Loss: {losses[-1][0]:.4f} | Final Test Loss: {losses[-1][1]:.4f}")
+        print(f"Training Loss Improvement: {losses[0][0] - losses[-1][0]:.4f} | Test Loss Improvement: {losses[0][1] - losses[-1][1]:.4f}")
+        print("-" * 60)
+        return losses
+
+    def predict(self, X):
         """
         Forward pass through all layers.
 
@@ -100,7 +110,7 @@ class Sequential:
 
     def __call__(self, X):
         """Allow model(X) syntax."""
-        return self.forward(X)
+        return self.predict(X)
 
     def summary(self):
         """Print model architecture."""

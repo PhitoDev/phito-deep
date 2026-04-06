@@ -67,8 +67,8 @@ class Softmax(Layer):
 
     def forward(self, X):
         self.cache["X"] = X
-        max_a = np.max(X)
         axis = None if X.ndim < 2 else 1
+        max_a = np.max(X, axis=axis, keepdims=True)
 
         dividend = np.exp(X - max_a)
         divisor = np.sum(np.exp(X - max_a), axis=axis, keepdims=True)

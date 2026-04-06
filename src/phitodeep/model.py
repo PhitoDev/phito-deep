@@ -66,7 +66,7 @@ class Sequential:
             epochs=self.epochs,
         )
 
-    def forward(self, X):
+    def predict(self, X):
         """
         Forward pass through all layers.
 
@@ -102,7 +102,7 @@ class Sequential:
 
     def __call__(self, X):
         """Allow model(X) syntax."""
-        return self.forward(X)
+        return self.predict(X)
 
     def summary(self):
         """Print model architecture."""

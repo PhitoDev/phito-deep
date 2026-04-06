@@ -60,7 +60,7 @@ def train_loop(
             y_batch = y[indices]
 
             # Forward pass
-            y_pred = model.forward(X_batch)
+            y_pred = model.predict(X_batch)
             loss = loss_class.loss_func(y_pred, y_batch)
 
             # Compute gradient of loss w.r.t. predictions (dy)
@@ -70,11 +70,11 @@ def train_loop(
             model.backward(dy)
             optimizer.step(model.layers)
 
-        y_pred = model.forward(X)
+        y_pred = model.predict(X)
         loss = loss_class.loss_func(y_pred, y)
         losses.append(loss)
 
-        y_pred_test = model.forward(X_test)
+        y_pred_test = model.predict(X_test)
         loss_test = loss_class.loss_func(y_pred_test, y_test)
 
         if epoch % 10 == 0:

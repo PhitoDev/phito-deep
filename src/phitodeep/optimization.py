@@ -48,7 +48,9 @@ class Adam(Optimizer):
                     param -= self.alpha * m_hat / (np.sqrt(v_hat) + self.epsilon)
 
 
-def train_loop(model, X, y, loss_class, optimizer, epochs=1000, batch_size=1):
+def train_loop(
+    model, X, y, X_test, y_test, loss_class, optimizer, epochs=1000, batch_size=1
+):
     losses = []
 
     for epoch in range(epochs):
@@ -58,7 +60,7 @@ def train_loop(model, X, y, loss_class, optimizer, epochs=1000, batch_size=1):
             y_batch = y[indices]
 
             # Forward pass
-            y_pred = model.forward(X_batch)
+            y_pred = model.predict(X_batch)
             loss = loss_class.loss_func(y_pred, y_batch)
 
             # Compute gradient of loss w.r.t. predictions (dy)
@@ -68,11 +70,14 @@ def train_loop(model, X, y, loss_class, optimizer, epochs=1000, batch_size=1):
             model.backward(dy)
             optimizer.step(model.layers)
 
-        y_pred = model.forward(X)
+        y_pred = model.predict(X)
         loss = loss_class.loss_func(y_pred, y)
         losses.append(loss)
 
+        y_pred_test = model.predict(X_test)
+        loss_test = loss_class.loss_func(y_pred_test, y_test)
+
         if epoch % 10 == 0:
-            print(f"Epoch {epoch}, Loss: {loss:.4f}")
+            print(f"Epoch {epoch}, Loss: {loss:.4f}, Test Loss: {loss_test:.4f}")
 
     return losses

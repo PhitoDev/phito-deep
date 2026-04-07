@@ -1,0 +1,36 @@
+name: Publish to PyPI
+on:
+    push:
+        branches:
+            - main
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write # required to push git tags
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Python 3.12
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install Poetry via pipx
+              run: pipx install poetry
+
+            - name: Configure PyPI repository
+              run: poetry config repositories.pypi https://upload.pypi.org/legacy/
+
+            - name: Build and publish to PyPI
+              env:
+                  POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+              run: poetry publish --build --no-interaction -r pypi
+
+            - name: Tag release
+              run: |
+                  VERSION=$(poetry version --short)
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+                  git tag "v$VERSION"
+                  git push origin "v$VERSION"

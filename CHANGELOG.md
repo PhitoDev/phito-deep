@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.1.2 (05/07/2026)
+## v0.1.3 (05/07/2026)
 
 - Removed datasets and pillow as package dependencies and moved to dev dependencies
 

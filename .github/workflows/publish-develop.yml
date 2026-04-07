@@ -22,5 +22,6 @@ jobs:
 
             - name: Build and publish to TestPyPI
               env:
-                  POETRY_PYPI_TOKEN_TEST_PYPI: ${{ secrets.TEST_PYPI_TOKEN }}
+                  POETRY_HTTP_BASIC_TEST_PYPI_USERNAME: __token__
+                  POETRY_HTTP_BASIC_TEST_PYPI_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
               run: poetry publish --build --no-interaction -r test-pypi

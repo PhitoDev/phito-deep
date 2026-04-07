@@ -5,6 +5,7 @@ description = "Deep learning framework built from scratch with numpy!"
 authors = ["Ralph Dugue"]
 license = "Apache License 2.0"
 readme = "README.md"
+packages = [{include = "phitodeep", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"

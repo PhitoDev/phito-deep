@@ -18,10 +18,10 @@ jobs:
               run: pipx install poetry
 
             - name: Configure TestPyPI repository
-              run: poetry config repositories.test-pypi https://upload.test.pypi.org/legacy/
+              run: poetry config repositories.testpypi https://test.pypi.org/legacy/
 
             - name: Build and publish to TestPyPI
               env:
-                  POETRY_HTTP_BASIC_TEST_PYPI_USERNAME: __token__
-                  POETRY_HTTP_BASIC_TEST_PYPI_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
-              run: poetry publish --build --no-interaction -r test-pypi
+                  POETRY_HTTP_BASIC_TESTPYPI_USERNAME: __token__
+                  POETRY_HTTP_BASIC_TESTPYPI_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
+              run: poetry publish --build --no-interaction -r testpypi

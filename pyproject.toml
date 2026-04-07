@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "phitodeep"
-version = "0.1.0"
+version = "0.1.1"
 description = "Deep learning framework built from scratch with numpy!"
 authors = ["Ralph Dugue"]
 license = "Apache License 2.0"
@@ -10,6 +10,7 @@ readme = "README.md"
 python = "^3.12"
 numpy = "^2.4.4"
 datasets = "^4.8.4"
+pillow = "^12.2.0"
 
 
 [build-system]

@@ -1,0 +1,26 @@
+name: Publish to TestPyPI
+on:
+    push:
+        branches:
+            - develop
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Python 3.12
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install Poetry via pipx
+              run: pipx install poetry
+
+            - name: Configure TestPyPI repository
+              run: poetry config repositories.test-pypi https://upload.test.pypi.org/legacy/
+
+            - name: Build and publish to TestPyPI
+              env:
+                  POETRY_PYPI_TOKEN_TEST_PYPI: ${{ secrets.TEST_PYPI_TOKEN }}
+              run: poetry publish --build --no-interaction -r test-pypi

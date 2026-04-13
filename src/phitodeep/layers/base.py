@@ -2,6 +2,10 @@ import numpy as np
 
 
 class Layer:
+    """
+    Base class for all layers in the network.
+    """
+
     def __init__(self, name) -> None:
         self.name = name
         self.cache = {}
@@ -22,8 +26,15 @@ class Layer:
         """
         raise NotImplementedError(f"Block '{self.name}' must implement backward method")
 
+    def copy(self):
+        raise NotImplementedError(f"Block '{self.name}' must implement copy method")
+
 
 class Flatten(Layer):
+    """
+    Flattens the input tensor into a 2D tensor.
+    """
+
     def __init__(self):
         super().__init__("flatten")
 
@@ -41,8 +52,17 @@ class Flatten(Layer):
         X = self.cache["X"]
         return dL_dZ.reshape(X.shape)
 
+    def copy(self):
+        new_layer = Flatten()
+        new_layer.cache = self.cache.copy()
+        return new_layer
+
 
 class Dense(Layer):
+    """
+    Fully connected layer.
+    """
+
     def __init__(self, input_size, output_size):
         super().__init__("dense")
         self.grads = {}
@@ -83,3 +103,11 @@ class Dense(Layer):
         dL_dX = np.dot(dL_dZ, self.W.T)
 
         return dL_dX
+
+    def copy(self):
+        new_layer = Dense(self.input_size, self.output_size)
+        new_layer.W = self.W.copy()
+        new_layer.b = self.b.copy()
+        new_layer.grads = {k: v.copy() for k, v in self.grads.items()}
+        new_layer.cache = {k: v.copy() for k, v in self.cache.items()}
+        return new_layer

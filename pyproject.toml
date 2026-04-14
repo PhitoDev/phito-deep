@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "phitodeep"
-version = "0.1.3"
+version = "0.1.4"
 description = "Deep learning framework built from scratch with numpy!"
 authors = ["Ralph Dugue"]
 license = "Apache License 2.0"
@@ -23,5 +23,6 @@ dev = [
     "sphinx-autoapi (>=3.8.0,<4.0.0)",
     "sphinx-rtd-theme (>=3.1.0,<4.0.0)",
     "pillow (>=12.2.0,<13.0.0)",
-    "datasets (>=4.8.4,<5.0.0)"
+    "datasets (>=4.8.4,<5.0.0)",
+    "pytest (>=9.0.3,<10.0.0)"
 ]

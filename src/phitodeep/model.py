@@ -46,6 +46,18 @@ class Sequential:
         self.loss_class = loss_class
 
     def train(self, X, y, X_test, y_test):
+        """
+        Train the model using the specified optimizer and loss function.
+
+        Args:
+            X (np.ndarray): Training data.
+            y (np.ndarray): Training labels.
+            X_test (np.ndarray): Test data.
+            y_test (np.ndarray): Test labels.
+
+        Returns:
+            list: A list of tuples containing the training and test losses for each epoch.
+        """
         match self.optimizer:
             case "sgd":
                 optimizer = optimization.SGD(alpha=self.alpha)
@@ -68,9 +80,15 @@ class Sequential:
 
         print("Training complete.")
         print("-" * 60)
-        print(f"Starting Training Loss: {losses[0][0]:.4f} | Starting Test Loss: {losses[0][1]:.4f}")
-        print(f"Final Training Loss: {losses[-1][0]:.4f} | Final Test Loss: {losses[-1][1]:.4f}")
-        print(f"Training Loss Improvement: {losses[0][0] - losses[-1][0]:.4f} | Test Loss Improvement: {losses[0][1] - losses[-1][1]:.4f}")
+        print(
+            f"Starting Training Loss: {losses[0][0]:.4f} | Starting Test Loss: {losses[0][1]:.4f}"
+        )
+        print(
+            f"Final Training Loss: {losses[-1][0]:.4f} | Final Test Loss: {losses[-1][1]:.4f}"
+        )
+        print(
+            f"Training Loss Improvement: {losses[0][0] - losses[-1][0]:.4f} | Test Loss Improvement: {losses[0][1] - losses[-1][1]:.4f}"
+        )
         print("-" * 60)
         return losses
 
@@ -128,6 +146,17 @@ class Sequential:
             else:
                 print(f"Layer {i}: {layer.name.upper():<10}")
         print("-" * 60)
+
+    def copy(self):
+        """Return a copy of the model."""
+        return Sequential(
+            *[layer.copy() for layer in self.layers],
+            alpha=self.alpha,
+            optimizer=self.optimizer,
+            batch_size=self.batch_size,
+            epochs=self.epochs,
+            loss_class=self.loss_class,
+        )
 
 
 class SequentialBuilder:
@@ -204,7 +233,7 @@ class SequentialBuilder:
     def build(self):
         """Build and return the Sequential model."""
         return Sequential(
-            *self.layers,
+            *[layer.copy() for layer in self.layers],
             alpha=self.alpha_value,
             optimizer=self.optimizer_name,
             batch_size=self.batch_size,

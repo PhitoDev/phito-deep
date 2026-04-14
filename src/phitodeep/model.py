@@ -233,7 +233,7 @@ class SequentialBuilder:
     def build(self):
         """Build and return the Sequential model."""
         return Sequential(
-            *self.layers,
+            *[layer.copy() for layer in self.layers],
             alpha=self.alpha_value,
             optimizer=self.optimizer_name,
             batch_size=self.batch_size,

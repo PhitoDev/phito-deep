@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.5
+
+- Removed redundant runs on pushes to develop / main in CI/CD. They already happen on PRs.
+
 ## v0.1.4 (05/14/2026)
 
 - Added a copy method to Sequential class to make deep copies of a model instance.

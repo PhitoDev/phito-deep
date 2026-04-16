@@ -51,11 +51,13 @@ class Adam(Optimizer):
 def train_loop(
     model, X, y, X_test, y_test, loss_class, optimizer, epochs=1000, batch_size=1
 ):
+
     losses = []
+    rng = np.random.default_rng()
 
     for epoch in range(epochs):
         for _ in range(len(X) // batch_size):
-            indices = np.random.randint(0, len(X), batch_size)
+            indices = rng.integers(0, len(X), batch_size)
             X_batch = X[indices]
             y_batch = y[indices]
 

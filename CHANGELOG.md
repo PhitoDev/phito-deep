@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.4 (05/14/2026)
+
+- Added a copy method to Sequential class to make deep copies of a model instance.
+- Added tests for Sequential class and builder, and added a test runner to CI/CD.
+
 ## v0.1.3 (05/07/2026)
 
 - Removed datasets and pillow as package dependencies and moved to dev dependencies

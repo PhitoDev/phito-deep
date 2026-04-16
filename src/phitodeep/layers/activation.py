@@ -20,6 +20,11 @@ class ReLu(Layer):
         dL_dX = dL_dZ * (X > 0).astype(float)
         return dL_dX
 
+    def copy(self):
+        new_layer = ReLu()
+        new_layer.cache = self.cache.copy()
+        return new_layer
+
 
 class Sigmoid(Layer):
     def __init__(self) -> None:
@@ -38,6 +43,11 @@ class Sigmoid(Layer):
         Z = self.cache["Z"]
         dL_dX = dL_dZ * Z * (1 - Z)
         return dL_dX
+
+    def copy(self):
+        new_layer = Sigmoid()
+        new_layer.cache = self.cache.copy()
+        return new_layer
 
 
 class Tanh(Layer):
@@ -59,6 +69,11 @@ class Tanh(Layer):
         Z = self.cache["Z"]
         dL_dX = dL_dZ * (1 - Z**2)
         return dL_dX
+
+    def copy(self):
+        new_layer = Tanh()
+        new_layer.cache = self.cache.copy()
+        return new_layer
 
 
 class Softmax(Layer):
@@ -85,6 +100,11 @@ class Softmax(Layer):
         """
         return dL_dZ
 
+    def copy(self):
+        new_layer = Softmax()
+        new_layer.cache = self.cache.copy()
+        return new_layer
+
 
 class ELU(Layer):
     def __init__(self, alpha=1.0) -> None:
@@ -104,3 +124,8 @@ class ELU(Layer):
         X = self.cache["X"]
         dL_dX = dL_dZ * np.where(X > 0, 1.0, self.alpha_activation * np.exp(X))
         return dL_dX
+
+    def copy(self):
+        new_layer = ELU(self.alpha_activation)
+        new_layer.cache = self.cache.copy()
+        return new_layer

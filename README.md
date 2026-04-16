@@ -1,6 +1,6 @@
-# phitodeep
+# Phito-Deep
 
-Deep learning framework built from scratch with numpy!
+Phito-Deep is a deep learning framework built from scratch with only numpy. This is being actively developed as part of my learning journey to becoming a machine learning engineer. I'm using it to better understand the underlying algorithms that power modern deep learning frameworks and architectures.
 
 ## Installation
 

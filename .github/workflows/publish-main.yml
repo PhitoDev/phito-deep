@@ -26,9 +26,10 @@ jobs:
               run: poetry publish --build --no-interaction
 
             - name: Tag release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   VERSION=$(poetry version --short)
                   git config user.name "github-actions[bot]"
                   git config user.email "github-actions[bot]@users.noreply.github.com"
-                  git tag "v$VERSION"
-                  git push origin "v$VERSION"
+                  gh release create "v$VERSION" --notes-file ./CHANGELOG.md

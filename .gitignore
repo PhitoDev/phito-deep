@@ -142,3 +142,6 @@ dmypy.json
 .DS_Store
 ./
 .gitignore
+
+# Emacs
+*.org

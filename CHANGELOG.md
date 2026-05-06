@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.0
+
+- Optimization module has been refactored. This is a breaking change.
+- Added initialization base class, He initialization, and Xavier initialization.
+- Documentation updated to include overview.
+
 ## v0.1.5
 
 - Removed redundant runs on pushes to develop / main in CI/CD. They already happen on PRs.

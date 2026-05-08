@@ -1,5 +1,6 @@
 from . import loss as ls
-from . import optimization
+from .optimization.training import train_loop
+from .optimization import optimizers as o
 from .layers import activation as a
 from .layers import base as b
 
@@ -9,7 +10,7 @@ class Sequential:
         self,
         *layers,
         alpha=0.01,
-        optimizer="adam",
+        optimizer: o.Optimizer=o.Adam(),
         batch_size=1,
         epochs=1000,
         loss_class=ls.MeanSquaredError(),
@@ -27,7 +28,7 @@ class Sequential:
         """
         self.layers = list(layers)
         self.alpha = alpha
-        self.optimizer = optimizer
+        self.optimizer_type = optimizer
         self.batch_size = batch_size
         self.epochs = epochs
         self.loss_class = loss_class
@@ -36,8 +37,8 @@ class Sequential:
         """Add a layer to the network."""
         self.layers.append(layer)
 
-    def setoptimizer(self, name):
-        self.optimizer = name
+    def setoptimizer(self, optimizer):
+        self.optimizer_type = optimizer
 
     def setbatchsize(self, num):
         self.batch_size = num
@@ -58,21 +59,13 @@ class Sequential:
         Returns:
             list: A list of tuples containing the training and test losses for each epoch.
         """
-        match self.optimizer:
-            case "sgd":
-                optimizer = optimization.SGD(alpha=self.alpha)
-            case "adam":
-                optimizer = optimization.Adam(alpha=self.alpha)
-            case _:
-                raise ValueError(f"{self.optimizer} is not a valid optimizer.")
-
-        losses = optimization.train_loop(
+        losses = train_loop(
             model=self,
             X=X,
             y=y,
             X_test=X_test,
             y_test=y_test,
-            optimizer=optimizer,
+            optimizer=self.optimizer_type,
             loss_class=self.loss_class,
             batch_size=self.batch_size,
             epochs=self.epochs,
@@ -152,7 +145,7 @@ class Sequential:
         return Sequential(
             *[layer.copy() for layer in self.layers],
             alpha=self.alpha,
-            optimizer=self.optimizer,
+            optimizer=self.optimizer_type,
             batch_size=self.batch_size,
             epochs=self.epochs,
             loss_class=self.loss_class,
@@ -165,7 +158,7 @@ class SequentialBuilder:
     def __init__(self):
         self.layers = []
         self.alpha_value = 1
-        self.optimizer_name = "sgd"
+        self.optimizer_type = o.Adam()
         self.batch_size = 1
         self.epochs_value = 1000
         self.loss_class = ls.MeanSquaredError()
@@ -205,9 +198,9 @@ class SequentialBuilder:
         self.layers.append(a.ELU(alpha_activation))
         return self
 
-    def optimizer(self, name):
+    def optimizer(self, optimizer):
         """Set the optimizer."""
-        self.optimizer_name = name
+        self.optimizer_type = optimizer
         return self
 
     def batch(self, num):
@@ -235,7 +228,7 @@ class SequentialBuilder:
         return Sequential(
             *[layer.copy() for layer in self.layers],
             alpha=self.alpha_value,
-            optimizer=self.optimizer_name,
+            optimizer=self.optimizer_type,
             batch_size=self.batch_size,
             epochs=self.epochs_value,
             loss_class=self.loss_class,

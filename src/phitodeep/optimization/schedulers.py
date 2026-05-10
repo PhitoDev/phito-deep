@@ -10,7 +10,7 @@ class AlphaScheduler:
         raise NotImplementedError(f"{self.name} must implement the step function")
 
 class InverseTimeDecay(AlphaScheduler):
-    def __init__(self, alpha: np.float16, decay_rate: np.float16):
+    def __init__(self, alpha: np.float16, decay_rate: np.float16=0.01):
         super().__init__("InverseTimeDecay", alpha)
         self.decay_rate = decay_rate
 

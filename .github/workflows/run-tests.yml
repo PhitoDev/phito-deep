@@ -3,27 +3,20 @@ name: Run Tests
 on:
     pull_request:
         branches:
+            - 'release/**'
             - develop
             - main
 
 jobs:
     test:
         runs-on: ubuntu-latest
-
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
 
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.12"
-
-            - name: Install dependencies
-              run: |
-                  pipx install poetry
-                  poetry install
+            - name: Install UV
+              run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
             - name: Run tests
               run: |
-                  poetry run pytest
+                  uv run pytest

@@ -2,12 +2,16 @@ import numpy as np
 
 
 class Optimizer:
+    def __init__(self, name: str) -> None:
+        self.name = name
+
     def step(self, layers):
         raise NotImplementedError
 
 
 class SGD(Optimizer):
     def __init__(self, alpha=0.01):
+        super().__init__("SGD")
         self.alpha = alpha
 
     def step(self, layers):
@@ -19,6 +23,7 @@ class SGD(Optimizer):
 
 class Adam(Optimizer):
     def __init__(self, alpha=0.01, beta1=0.9, beta2=0.999, epsilon=1e-8):
+        super().__init__("Adam")
         self.alpha = alpha
         self.beta1 = beta1
         self.beta2 = beta2
@@ -46,41 +51,3 @@ class Adam(Optimizer):
 
                     param = getattr(layer, param_name)
                     param -= self.alpha * m_hat / (np.sqrt(v_hat) + self.epsilon)
-
-
-def train_loop(
-    model, X, y, X_test, y_test, loss_class, optimizer, epochs=1000, batch_size=1
-):
-
-    losses = []
-    rng = np.random.default_rng()
-
-    for epoch in range(epochs):
-        for _ in range(len(X) // batch_size):
-            indices = rng.integers(0, len(X), batch_size)
-            X_batch = X[indices]
-            y_batch = y[indices]
-
-            # Forward pass
-            y_pred = model.predict(X_batch)
-            loss = loss_class.loss_func(y_pred, y_batch)
-
-            # Compute gradient of loss w.r.t. predictions (dy)
-            dy = loss_class.loss_gradient(y_pred, y_batch)
-
-            # Backward pass with gradient of loss
-            model.backward(dy)
-            optimizer.step(model.layers)
-
-        y_pred = model.predict(X)
-        loss = loss_class.loss_func(y_pred, y)
-
-        y_pred_test = model.predict(X_test)
-        loss_test = loss_class.loss_func(y_pred_test, y_test)
-
-        losses.append((loss, loss_test))
-
-        if epoch % 10 == 0:
-            print(f"Epoch {epoch}, Loss: {loss:.4f}, Test Loss: {loss_test:.4f}")
-
-    return losses

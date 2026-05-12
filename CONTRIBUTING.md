@@ -1,4 +1,4 @@
-# Contributing
+# Contributing to Phito-Deep
 
 Contributions are welcome, and they are greatly appreciated! Every little bit
 helps, and credit will always be given.
@@ -42,20 +42,11 @@ If you are proposing a feature:
 
 Ready to contribute? Here's how to set up `phitodeep` for local development.
 
-1. Download a copy of `phitodeep` locally.
+1. Clone the repository from GitHub.
 
-2. Create and activate a conda environment for `phitodeep`:
+2. You will need to install [UV](https://docs.astral.sh/uv/getting-started/installation/). It is a modern Python environment and project management tool. You will grow to love it, trust me.
 
-    ```console
-    $ conda create -n phitodeep python=3.12
-    $ conda activate phitodeep
-    ```
-
-3. Install `phitodeep` using `poetry`:
-
-    ```console
-    $ poetry install
-    ```
+3. Simply run `uv run pytest` in the root directory of your cloned repository and it should automatically create your virtual environment with all the necessary dependencies, followed by running the project test suite.
 
 4. Use `git` (or similar) to create a branch for local development and make your changes:
 
@@ -65,7 +56,7 @@ Ready to contribute? Here's how to set up `phitodeep` for local development.
 
 5. When you're done making changes, check that your changes conform to any code formatting requirements and pass any tests.
 
-6. Commit your changes and open a pull request.
+6. Commit your changes and open a pull request against the current release branch in development.
 
 ## Pull Request Guidelines
 

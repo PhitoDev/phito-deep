@@ -1,26 +1,9 @@
 # Changelog
 
-## v0.1.5
+## v0.2.0
 
-- Removed redundant runs on pushes to develop / main in CI/CD. They already happen on PRs.
+- Optimization module has been refactored. This is a breaking change.
+- Added initialization base class, He initialization, and Xavier initialization.
+- Added "full-batch" training by setting `batch_size` model parameter to `None`.
+- Documentation updated to include overview.
 
-## v0.1.4 (05/14/2026)
-
-- Added a copy method to Sequential class to make deep copies of a model instance.
-- Added tests for Sequential class and builder, and added a test runner to CI/CD.
-
-## v0.1.3 (05/07/2026)
-
-- Removed datasets and pillow as package dependencies and moved to dev dependencies
-
-## v0.1.2 (05/07/2026)
-
-- Fixing CI publishing issue 
-
-## v0.1.1 (05/07/2026)
-
-- Setup CI/CD with GitHub Actions
-
-## v0.1.0 (05/04/2026)
-
-- First release of `phitodeep`!

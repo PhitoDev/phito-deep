@@ -5,7 +5,7 @@ from .base import Layer
 
 class ReLu(Layer):
     def __init__(self) -> None:
-        super().__init__("relu")
+        super().__init__("relu", None)
 
     def forward(self, X):
         self.cache["X"] = X
@@ -27,7 +27,7 @@ class ReLu(Layer):
 
 class LeakyReLu(Layer):
     def __init__(self, alpha=0.01) -> None:
-        super().__init__("leaky_rely")
+        super().__init__("leaky_rely", None)
         self.alpha = alpha
 
     def forward(self, X):
@@ -46,7 +46,7 @@ class LeakyReLu(Layer):
 
 class GELU(Layer):
     def __init__(self) -> None:
-        super.__init__("gelu")
+        super.__init__("gelu", None)
 
     def forward(self, X):
         self.cache["X"] = X
@@ -72,7 +72,7 @@ class GELU(Layer):
 
 class Swish(Layer):
     def __init__(self) -> None:
-        super().__init__("swish")
+        super().__init__("swish", None)
 
     def forward(self, X):
         self.cache["X"] = X
@@ -93,7 +93,7 @@ class Swish(Layer):
 
 class Sigmoid(Layer):
     def __init__(self) -> None:
-        super().__init__("sigmoid")
+        super().__init__("sigmoid", None)
 
     def forward(self, X):
         self.cache["X"] = X
@@ -117,7 +117,7 @@ class Sigmoid(Layer):
 
 class Tanh(Layer):
     def __init__(self) -> None:
-        super().__init__("tanh")
+        super().__init__("tanh", None)
 
     def forward(self, X):
         self.cache["X"] = X
@@ -143,7 +143,7 @@ class Tanh(Layer):
 
 class Softmax(Layer):
     def __init__(self) -> None:
-        super().__init__("softmax")
+        super().__init__("softmax", None)
 
     def forward(self, X):
         self.cache["X"] = X
@@ -173,7 +173,7 @@ class Softmax(Layer):
 
 class ELU(Layer):
     def __init__(self, alpha=1.0) -> None:
-        super().__init__("elu")
+        super().__init__("elu", None)
         self.alpha_activation = alpha
 
     def forward(self, X):

@@ -1,6 +1,7 @@
 from . import loss as ls
 from .optimization.training import train_loop
 from .optimization import optimizers as o
+from .optimization.initialization import He
 from .layers import activation as a
 from .layers import base as b
 
@@ -11,7 +12,7 @@ class Sequential:
         *layers,
         alpha=0.01,
         optimizer: o.Optimizer=o.Adam(),
-        batch_size=1,
+        batch_size=None,
         epochs=1000,
         loss_class=ls.MeanSquaredError(),
     ) -> None:
@@ -128,7 +129,7 @@ class Sequential:
         print("Model Summary:")
         print("-" * 60)
         print(
-            f"Optimizer: {self.optimizer} | Learning Rate: {self.alpha} | Batch Size: {self.batch_size} \nEpochs: {self.epochs} | Loss: {self.loss_class.name}"
+            f"Optimizer: {self.optimizer_type.name} | Learning Rate: {self.alpha} | Batch Size: {self.batch_size} \nEpochs: {self.epochs} | Loss: {self.loss_class.name}"
         )
         print("-" * 60)
         for i, layer in enumerate(self.layers):
@@ -168,9 +169,9 @@ class SequentialBuilder:
         self.layers.append(b.Flatten())
         return self
 
-    def dense(self, input_size, output_size):
+    def dense(self, input_size, output_size, initializer=He()):
         """Add a Dense layer."""
-        self.layers.append(b.Dense(input_size, output_size))
+        self.layers.append(b.Dense(input_size, output_size, initializer))
         return self
 
     def relu(self):

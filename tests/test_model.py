@@ -66,7 +66,7 @@ class TestSequential:
 
     def test_default_batch_size(self):
         model = m.Sequential()
-        assert model.batch_size == 1
+        assert model.batch_size == None
 
     def test_default_epochs(self):
         model = m.Sequential()

@@ -2,12 +2,16 @@ import numpy as np
 
 
 class Optimizer:
+    def __init__(self, name: str) -> None:
+        self.name = name
+
     def step(self, layers):
         raise NotImplementedError
 
 
 class SGD(Optimizer):
     def __init__(self, alpha=0.01):
+        super().__init__("SGD")
         self.alpha = alpha
 
     def step(self, layers):
@@ -19,6 +23,7 @@ class SGD(Optimizer):
 
 class Adam(Optimizer):
     def __init__(self, alpha=0.01, beta1=0.9, beta2=0.999, epsilon=1e-8):
+        super().__init__("Adam")
         self.alpha = alpha
         self.beta1 = beta1
         self.beta2 = beta2

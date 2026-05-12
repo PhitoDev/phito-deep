@@ -17,7 +17,7 @@ class Initializer:
         )
 
 class Xavier(Initializer):
-    def __init__(self, init_type: InitType=InitType.UNIFORM):
+    def __init__(self, init_type: InitType=InitType.NORMAL):
         super().__init__("Xavier", init_type)
 
     def get_scale(self, weights: np.ndarray) -> float:
@@ -28,7 +28,7 @@ class Xavier(Initializer):
         return np.sqrt(divident / (fan_in + fan_out))
 
 class He(Initializer):
-    def __init__(self, init_type: InitType=InitType.UNIFORM):
+    def __init__(self, init_type: InitType=InitType.NORMAL):
         super().__init__("He", init_type)
 
     def get_scale(self, weights: np.ndarray) -> float:

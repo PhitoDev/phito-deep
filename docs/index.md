@@ -5,6 +5,7 @@
 :maxdepth: 1
 :hidden:
 
+overview.md
 mnist.ipynb
 changelog.md
 contributing.md

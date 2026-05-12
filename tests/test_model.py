@@ -5,6 +5,7 @@ from phitodeep import loss as ls
 from phitodeep import model as m
 from phitodeep.layers import activation as a
 from phitodeep.layers import base as b
+from phitodeep.optimization import optimizers as o
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -41,7 +42,7 @@ def trainable_model():
         b.Dense(8, 2),
         a.Softmax(),
         loss_class=ls.CategoricalCrossEntropy(),
-        optimizer="adam",
+        optimizer=o.Adam(),
         epochs=3,
         batch_size=4,
     )
@@ -57,7 +58,7 @@ class TestSequential:
 
     def test_default_optimizer_is_adam(self):
         model = m.Sequential()
-        assert model.optimizer == "adam"
+        assert isinstance(model.optimizer_type, o.Adam)
 
     def test_default_alpha(self):
         model = m.Sequential()
@@ -65,7 +66,7 @@ class TestSequential:
 
     def test_default_batch_size(self):
         model = m.Sequential()
-        assert model.batch_size == 1
+        assert model.batch_size == None
 
     def test_default_epochs(self):
         model = m.Sequential()
@@ -116,8 +117,8 @@ class TestSequential:
     # --- setoptimizer / setbatchsize / setloss ---
 
     def test_setoptimizer_updates_attribute(self, simple_model):
-        simple_model.setoptimizer("sgd")
-        assert simple_model.optimizer == "sgd"
+        simple_model.setoptimizer(o.SGD())
+        assert isinstance(simple_model.optimizer_type, o.SGD)
 
     def test_setbatchsize_updates_attribute(self, simple_model):
         simple_model.setbatchsize(64)
@@ -189,7 +190,7 @@ class TestSequential:
             assert np.isfinite(train_loss)
             assert np.isfinite(test_loss)
 
-    @pytest.mark.parametrize("optimizer", ["sgd", "adam"])
+    @pytest.mark.parametrize("optimizer", [o.SGD(), o.Adam()])
     def test_train_works_with_both_optimizers(self, small_data, optimizer):
         X, y = small_data
         model = m.Sequential(
@@ -204,12 +205,6 @@ class TestSequential:
         )
         losses = model.train(X, y, X, y)
         assert len(losses) == 2
-
-    def test_train_raises_on_invalid_optimizer(self, trainable_model, small_data):
-        X, y = small_data
-        trainable_model.setoptimizer("invalid_opt")
-        with pytest.raises(ValueError, match="invalid_opt"):
-            trainable_model.train(X, y, X, y)
 
     # --- copy ---
 
@@ -245,7 +240,7 @@ class TestSequential:
 
     def test_copy_preserves_optimizer(self, simple_model):
         copy = simple_model.copy()
-        assert copy.optimizer == simple_model.optimizer
+        assert copy.optimizer_type == simple_model.optimizer_type
 
     def test_copy_preserves_batch_size(self, simple_model):
         copy = simple_model.copy()
@@ -313,8 +308,8 @@ class TestSequentialBuilder:
     # --- hyperparameter methods ---
 
     def test_optimizer_sets_correctly(self):
-        model = m.SequentialBuilder().optimizer("sgd").build()
-        assert model.optimizer == "sgd"
+        model = m.SequentialBuilder().optimizer(o.SGD()).build()
+        assert isinstance(model.optimizer_type, o.SGD)
 
     def test_alpha_sets_correctly(self):
         model = m.SequentialBuilder().alpha(0.001).build()
@@ -344,7 +339,7 @@ class TestSequentialBuilder:
         assert builder.tanh() is builder
         assert builder.softmax() is builder
         assert builder.elu() is builder
-        assert builder.optimizer("adam") is builder
+        assert builder.optimizer(o.Adam()) is builder
         assert builder.alpha(0.01) is builder
         assert builder.batch(32) is builder
         assert builder.epochs(100) is builder
@@ -386,14 +381,14 @@ class TestSequentialBuilder:
             m.SequentialBuilder()
             .dense(4, 2)
             .softmax()
-            .optimizer("adam")
+            .optimizer(o.Adam())
             .alpha(0.001)
             .batch(64)
             .epochs(10)
             .loss(cce)
             .build()
         )
-        assert model.optimizer == "adam"
+        assert isinstance(model.optimizer_type, o.Adam)
         assert model.alpha == 0.001
         assert model.batch_size == 64
         assert model.epochs == 10

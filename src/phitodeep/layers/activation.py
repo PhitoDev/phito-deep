@@ -5,7 +5,7 @@ from .base import Layer
 
 class ReLu(Layer):
     def __init__(self) -> None:
-        super().__init__("relu")
+        super().__init__("relu", None)
 
     def forward(self, X):
         self.cache["X"] = X
@@ -25,10 +25,75 @@ class ReLu(Layer):
         new_layer.cache = self.cache.copy()
         return new_layer
 
+class LeakyReLu(Layer):
+    def __init__(self, alpha=0.01) -> None:
+        super().__init__("leaky_rely", None)
+        self.alpha = alpha
+
+    def forward(self, X):
+        self.cache["X"] = X
+        return np.where(X > 0, X, self.alpha * X)
+
+    def backward(self, dL_dZ):
+        X = self.cache["X"]
+        dL_dX = dL_dZ * np.where(X > 0, 1, self.alpha)
+        return dL_dX
+
+    def copy(self):
+        new_layer = LeakyReLu()
+        new_layer.cache = self.cache.copy()
+        return new_layer
+
+class GELU(Layer):
+    def __init__(self) -> None:
+        super.__init__("gelu", None)
+
+    def forward(self, X):
+        self.cache["X"] = X
+        constant = 0.044715
+        inner = (np.sqrt(2.0 / np.pi) * (X + constant * X ** 3))
+        t = Tanh().forward(inner)
+        self.cache["t"] = t
+        return 0.5 * X * (1 + t)
+
+    def backward(self, dL_dz):
+        t = self.cache["t"]
+        X = self.cache["X"]
+        dL_dX = 0.5 * (1 + t)
+        dL_dX += 0.5 * x * (1 - t ** 2) * np.sqrt(2.0 / np.pi)
+        dL_dX *= (1 + 3 * constant * X ** 3)
+        dL_dX *= dL_dZ
+        return dl_dX
+
+    def copy(self):
+        new_layer = GELU()
+        new_layer.cache = self.cache.copy()
+        return new_layer
+
+class Swish(Layer):
+    def __init__(self) -> None:
+        super().__init__("swish", None)
+
+    def forward(self, X):
+        self.cache["X"] = X
+        Z = 1 / (1 + np.exp(-X))
+        self.cache["Z"] = Z
+        return X * Z
+
+    def backward(self, dL_dZ):
+        X = self.cache["X"]
+        Z = self.cache["Z"]
+        dL_dX =  dL_dZ * (Z + X * Z * (1 - Z))
+        return dL_dX
+
+    def copy(self):
+        new_layer = Swish()
+        new_layer.cache = self.cache.copy()
+        return new_layer
 
 class Sigmoid(Layer):
     def __init__(self) -> None:
-        super().__init__("sigmoid")
+        super().__init__("sigmoid", None)
 
     def forward(self, X):
         self.cache["X"] = X
@@ -52,7 +117,7 @@ class Sigmoid(Layer):
 
 class Tanh(Layer):
     def __init__(self) -> None:
-        super().__init__("tanh")
+        super().__init__("tanh", None)
 
     def forward(self, X):
         self.cache["X"] = X
@@ -78,7 +143,7 @@ class Tanh(Layer):
 
 class Softmax(Layer):
     def __init__(self) -> None:
-        super().__init__("softmax")
+        super().__init__("softmax", None)
 
     def forward(self, X):
         self.cache["X"] = X
@@ -108,7 +173,7 @@ class Softmax(Layer):
 
 class ELU(Layer):
     def __init__(self, alpha=1.0) -> None:
-        super().__init__("elu")
+        super().__init__("elu", None)
         self.alpha_activation = alpha
 
     def forward(self, X):

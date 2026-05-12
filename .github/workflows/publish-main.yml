@@ -27,7 +27,7 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  VERSION=$(poetry version --short)
+                  VERSION=$(uv version --short)
                   git config user.name "github-actions[bot]"
                   git config user.email "github-actions[bot]@users.noreply.github.com"
                   gh release create "v$VERSION" --notes-file ./CHANGELOG.md

@@ -1,17 +1,20 @@
 import numpy as np
 
+from ..optimization.initialization import Initializer, InitType, He
+
 
 class Layer:
     """
     Base class for all layers in the network.
     """
 
-    def __init__(self, name) -> None:
+    def __init__(self, name: str, initializer: Initializer) -> None:
         self.name = name
         self.cache = {}
         self.grads = {}
+        self.initializer = initializer
 
-    def forward(self, X):
+    def forward(self, X: np.ndarray):
         raise NotImplementedError(f"Block '{self.name}' must implement forward method")
 
     def backward(self, dL_dZ):
@@ -36,9 +39,9 @@ class Flatten(Layer):
     """
 
     def __init__(self):
-        super().__init__("flatten")
+        super().__init__("flatten", He())
 
-    def forward(self, X):
+    def forward(self, X: np.ndarray):
         """
         X: (batch_size, ...) -> (batch_size, ...)
         """
@@ -63,16 +66,22 @@ class Dense(Layer):
     Fully connected layer.
     """
 
-    def __init__(self, input_size, output_size):
-        super().__init__("dense")
+    def __init__(self, input_size: int, output_size: int, initializer: Initializer=He()):
+        super().__init__("dense", initializer)
         self.grads = {}
         self.input_size = input_size
         self.output_size = output_size
+
         # Initialize weights and biases
-        self.W = np.random.randn(input_size, output_size) * np.sqrt(2.0 / input_size)
+        rng = np.random.default_rng()
+        if initializer.init_type == InitType.NORMAL:
+            weights = rng.normal(size=(input_size, output_size))
+        else:
+            weights = rng.uniform(size=(input_size, output_size))
+        self.W = weights * initializer.get_scale(weights)
         self.b = np.zeros(output_size)
 
-    def forward(self, X):
+    def forward(self, X: np.ndarray):
         """
         X: (batch_size, input_size) -> (batch_size, output_size)
         """

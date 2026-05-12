@@ -1,6 +1,6 @@
-# phitodeep
+# Phito-Deep
 
-Deep learning framework built from scratch with numpy!
+Phito-Deep is a deep learning framework built from scratch with only numpy. This is being actively developed as part of my learning journey to becoming a machine learning engineer. I'm using it to better understand the underlying algorithms that power modern deep learning frameworks and architectures.
 
 ## Installation
 
@@ -14,8 +14,10 @@ MNIST quickstart:
 import numpy as np
 from datasets import load_dataset
 
-import phitodeep.loss as loss
-import phitodeep.model as m
+from phitodeep.model import SequentialBuilder
+from phitodeep.loss import CategoricalCrossEntropy
+from phitodeep.optimization.optimizers import Adam
+from phitodeep.optimization.initialization import Xavier, InitType
 
 train_dataset = load_dataset("ylecun/mnist", split="train")
 test_dataset = load_dataset("ylecun/mnist", split="test")
@@ -32,24 +34,25 @@ y_test = np.array(y_test)
 print(X_train.shape, y_train.shape)
 
 model = (
-    m.SequentialBuilder()
+    SequentialBuilder()
     .flatten()
     .dense(784, 128)
     .relu()
-    .dense(128, 10)
+    .dense(128, 64, Xavier(InitType.NORMAL))
+    .relu()
+    .dense(64, 10, Xavier(InitType.NORMAL))
     .softmax()
-    .optimizer("adam")
-    .loss(loss.CategoricalCrossEntropy())
-    .alpha(0.001)
-    .epochs(300)
-    .batch(32)
+    .optimizer(Adam())
+    .loss(CategoricalCrossEntropy())
+    .alpha(0.05)
+    .epochs(5)
+    .batch(64)
     .build()
 )
 
 model.summary()
 
 model.train(X_train, y_train, X_test, y_test)
-
 ```
 
 ## Contributing

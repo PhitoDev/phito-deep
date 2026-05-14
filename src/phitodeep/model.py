@@ -160,7 +160,7 @@ class SequentialBuilder:
         self.layers = []
         self.alpha_value = 1
         self.optimizer_type = o.Adam()
-        self.batch_size = 1
+        self.batch_size = None
         self.epochs_value = 1000
         self.loss_class = ls.MeanSquaredError()
 

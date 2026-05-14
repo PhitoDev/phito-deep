@@ -54,3 +54,29 @@ class BinaryCrossEntropy(LossBase):
 
     def loss_gradient(self, y_pred, y_true):
         return (y_pred - y_true) / (y_pred * (1 - y_pred) + 1e-8)
+
+class Hinge(LossBase):
+    def __init__(self) -> None:
+        super().__init__("Hinge")
+
+    def loss_func(self, y_pred, y_true):
+        return np.maximum(0, 1 - y_pred * y_true)
+
+    def loss_gradient(self, y_pred, y_true):
+        yz = y_pred * y_true
+        return np.where(yz < 1, -y_true, 0)
+
+class Huber(LossBase):
+    def __init__(self, delta=1.0):
+        super().__init__("Huber")
+        self.delta = delta
+
+    def loss_func(self, y_pred, y_true):
+        error = y_true - y_pred
+        L1 = error ** 2 / 2
+        L2 = self.delta * (np.abs(error) - (self.delta / 2))
+        return np.where(np.abs(error) > self.delta, L1, L2)
+
+    def loss_gradient(self, y_pred, y_true):
+        error = y_pred - y_true
+        return np.where(np.abs(error) > self.delta, self.delta * np.sign(error), error)

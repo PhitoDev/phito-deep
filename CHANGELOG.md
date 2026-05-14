@@ -1,6 +1,5 @@
 # Changelog
 
-## v0.2.1
+## v0.2.2
 
-- Fixed a bug where `SequentialBuilder`could not do full batch training.
-- Added Hinge and Huber loss.
+- Crash fix for Huber and Hinge loss.

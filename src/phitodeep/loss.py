@@ -60,7 +60,7 @@ class Hinge(LossBase):
         super().__init__("Hinge")
 
     def loss_func(self, y_pred, y_true):
-        return np.maximum(0, 1 - y_pred * y_true)
+        return np.mean(np.maximum(0, 1 - y_pred * y_true))
 
     def loss_gradient(self, y_pred, y_true):
         yz = y_pred * y_true
@@ -75,7 +75,7 @@ class Huber(LossBase):
         error = y_true - y_pred
         L1 = error ** 2 / 2
         L2 = self.delta * (np.abs(error) - (self.delta / 2))
-        return np.where(np.abs(error) > self.delta, L1, L2)
+        return np.mean(np.where(np.abs(error) > self.delta, L1, L2))
 
     def loss_gradient(self, y_pred, y_true):
         error = y_pred - y_true

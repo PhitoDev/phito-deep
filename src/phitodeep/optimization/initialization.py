@@ -7,7 +7,7 @@ class InitType(Enum):
     UNIFORM = 2
 
 class Initializer:
-    def __init__(self, name: str, init_type: InitType):
+    def __init__(self, name: str, init_type: InitType=InitType.NORMAL):
         self.name = name
         self.init_type = init_type
 

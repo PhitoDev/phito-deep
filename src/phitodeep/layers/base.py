@@ -8,7 +8,7 @@ class Layer:
     Base class for all layers in the network.
     """
 
-    def __init__(self, name: str, initializer: Initializer) -> None:
+    def __init__(self, name: str, initializer: Initializer=Initializer()) -> None:
         self.name = name
         self.cache = {}
         self.grads = {}

@@ -27,7 +27,7 @@ class ReLu(Layer):
 
 class LeakyReLu(Layer):
     def __init__(self, alpha=0.01) -> None:
-        super().__init__("leaky_rely", None)
+        super().__init__("leaky_relu", None)
         self.alpha = alpha
 
     def forward(self, X):
@@ -46,24 +46,24 @@ class LeakyReLu(Layer):
 
 class GELU(Layer):
     def __init__(self) -> None:
-        super.__init__("gelu", None)
+        super().__init__("gelu", None)
+        self.constant = 0.044715
 
     def forward(self, X):
         self.cache["X"] = X
-        constant = 0.044715
-        inner = (np.sqrt(2.0 / np.pi) * (X + constant * X ** 3))
+        inner = (np.sqrt(2.0 / np.pi) * (X + self.constant * X ** 3))
         t = Tanh().forward(inner)
         self.cache["t"] = t
         return 0.5 * X * (1 + t)
 
-    def backward(self, dL_dz):
+    def backward(self, dL_dZ):
         t = self.cache["t"]
         X = self.cache["X"]
         dL_dX = 0.5 * (1 + t)
-        dL_dX += 0.5 * x * (1 - t ** 2) * np.sqrt(2.0 / np.pi)
-        dL_dX *= (1 + 3 * constant * X ** 3)
+        dL_dX += 0.5 * X * (1 - t ** 2) * np.sqrt(2.0 / np.pi)
+        dL_dX *= (1 + 3 * self.constant * X ** 3)
         dL_dX *= dL_dZ
-        return dl_dX
+        return dL_dX
 
     def copy(self):
         new_layer = GELU()

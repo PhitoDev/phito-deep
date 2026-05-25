@@ -1,5 +1,5 @@
 # Changelog
 
-## v0.2.2
+## v0.2.3
 
-- Crash fix for Huber and Hinge loss.
+- Fixed several bugs in `activations` module.
